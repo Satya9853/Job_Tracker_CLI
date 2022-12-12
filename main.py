@@ -107,16 +107,40 @@ def search_job(text, by):
 
 # edit job functionality
 @main.command()
-def edit_job():
+# jobtracker edit-job --field Title --old Developer --new Data Scientist
+@click.option("--field", "-f", help="Field By Which You Want Search For The Job")
+@click.option("--old", "-o", help="The Data which You Want to Replace")
+@click.option("--new", "-n", help="The New Updated Data")
+def edit_job(field, old, new):
     """edit a job"""
-    click.echo("edit job")
+    old = old.title()
+    new = new.title()
+    connectDB.edit_job_by(new_text=new, old_text=old, field=field)
+    click.secho("\n\nSuccessfully Updated", fg="green")
+
+    result = connectDB.show_all_jobs()
+    result = [HEADERS] + result
+    table = terminaltables.AsciiTable(result)
+    click.secho(f"\n\n{table.table}", fg="yellow")
+
 
 
 # delete job functionality
 @main.command()
-def delete_job():
+@click.option("--title", "-t", help="Enter the title You Want To Delete")
+def delete_job(title):
     """delete a job"""
-    click.echo("delete job")
+    title = title.title()
+    click.secho(f"\n\nDeleting Job With Title -> {title}", fg="red")
+
+    connectDB.delete_job(title)
+
+    click.secho(f"\n\nSuccessfully Deleted Job WIth Title -> {title}", fg="green")
+
+    result = connectDB.show_all_jobs()
+    result = [HEADERS] + result
+    table = terminaltables.AsciiTable(result)
+    click.secho(f"\n\n{table.table}", fg="yellow")
 
 
 if __name__ == "__main__":

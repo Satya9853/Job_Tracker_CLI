@@ -27,3 +27,19 @@ def get_job_by(text, field):
     c.execute(f"SELECT * FROM jobstable WHERE {field} = '{text}'")
     data = c.fetchall()
     return data
+
+
+#  Edit Job
+def edit_job_by(new_text, old_text, field):
+    c.execute(f'UPDATE jobstable SET {field}="{new_text}" WHERE {field}="{old_text}"')
+    conn.commit()
+    data = c.fetchall()
+    return data
+
+
+# Delete Job
+def delete_job(title):
+    c.execute(f'DELETE FROM jobstable WHERE title="{title}"')
+    conn.commit()
+
+
