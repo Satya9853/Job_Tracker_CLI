@@ -34,6 +34,12 @@ def main():
 @click.option("--jobtype", "-jt", help="Type Of The Job", type=click.Choice(["Full-Time", "Remote", "Part-Time", "Contract"]), prompt="Job Type")
 def add_job(name, address, email, title, salary, status, jobtype):
     """ add job -> name, address, email, title, salary, status, job_type"""
+    name = name.title()
+    address = address.title()
+    email = email.title()
+    title = title.title()
+    status = status.title()
+    jobtype = jobtype.title()
 
     click.secho("\n\nAdding Job ...", fg="blue", bg="white")
     click.echo("\n\n===========Summary===========")
@@ -67,7 +73,7 @@ def show_all_job():
     click.secho(f"\n\n{table.table}", fg="yellow")
 
 
-# view job functionality
+# view job by title functionality
 @main.command()
 @click.option("--title", "-t", prompt=True, help="View Job By Title")
 def view_job(title):
@@ -85,11 +91,20 @@ def view_job(title):
 # search job functionality
 @main.command()
 @click.argument("text")
-def search_job():
+@click.option("--by", "-b", default="title", help="Provide the Field For Which You Want To Search", type=click.Choice(["name", "title", "status"]))
+def search_job(text, by):
     """ search "job" by name, title, status"""
-    click.echo("search job")
-    
-    
+    text = text.title()
+    click.secho(f"\n\nSearching Job with {by} -> {text} ...", fg="blue", bg="white")
+    result = connectDB.get_job_by(text=text, field=by)
+    if len(result) == 0:
+        click.secho(f"\n\nNo Job Was Found With {by} -> {text}", fg="yellow")
+        return
+    result = [HEADERS] + result
+    table = terminaltables.AsciiTable(result)
+    click.secho(f"\n\n{table.table}", fg="yellow")
+
+
 # edit job functionality
 @main.command()
 def edit_job():

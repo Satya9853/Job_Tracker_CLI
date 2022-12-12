@@ -11,7 +11,7 @@ def create_table():
 
 # Add Data
 def add_data(name, address, email, title, salary, status, jobtype):
-    c.execute("INSERT INTO jobstable(name, address, email, title, salary, status, jobtype) VALUES (?,?,?,?,?,?,?)",(name, address, email, title, salary, status, jobtype))
+    c.execute("INSERT INTO jobstable(name, address, email, title, salary, status, jobtype) VALUES (?,?,?,?,?,?,?)", (name, address, email, title, salary, status, jobtype))
     conn.commit()
 
 
